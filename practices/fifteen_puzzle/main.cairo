@@ -57,30 +57,34 @@ end
 func main{output_ptr : felt*, range_check_ptr}():
     alloc_locals
 
-    local loc0 : Location
-    assert loc0.row = 0
-    assert loc0.col = 2
-    local loc1 : Location
-    assert loc1.row = 1
-    assert loc1.col = 2
-    local loc2 : Location
-    assert loc2.row = 1
-    assert loc2.col = 3
-    local loc3 : Location
-    assert loc3.row = 2
-    assert loc3.col = 3
-    local loc4 : Location
-    assert loc4.row = 3
-    assert loc4.col = 3
+    # Declare two variables that will point to the two lists and
+    # another variable that will contain the number of steps.
+    local loc_list : Location*
+    local tile_list : felt*
+    local n_steps
 
-    local tile0 = 3
-    local tile1 = 7
-    local tile2 = 8
-    local tile3 = 12
+    %{
+        # The verifier doesn't care where those lists are
+        # allocated or what values they contain, so we use a hint
+        # to populate them.
+        locations = program_input['loc_list']
+        tiles = program_input['tile_list']
 
-    # Get the value of the frame pointer register (fp) so that
-    # we can use the address of loc0.
-    let (__fp__, _) = get_fp_and_pc()
-    check_solution(loc_list=&loc0, tile_list=&tile0, n_steps=4)
+        ids.loc_list = loc_list = segments.add()
+        for i, val in enumerate(locations):
+            memory[loc_list + i] = val
+
+        ids.tile_list = tile_list = segments.add()
+        for i, val in enumerate(tiles):
+            memory[tile_list + i] = val
+
+        ids.n_steps = len(tiles)
+
+        # Sanity check (only the prover runs this check).
+        assert len(locations) == 2 * (len(tiles) + 1)
+    %}
+
+    check_solution(
+        loc_list=loc_list, tile_list=tile_list, n_steps=n_steps)
     return ()
 end
