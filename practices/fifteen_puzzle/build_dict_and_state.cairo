@@ -1,6 +1,5 @@
 from starkware.cairo.common.dict_access import DictAccess
 from starkware.cairo.common.serialize import serialize_word
-from starkware.cairo.common.squash_dict import squash_dict
 
 from practices.fifteen_puzzle.verify_location_list import Location
 
