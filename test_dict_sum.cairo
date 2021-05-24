@@ -101,7 +101,7 @@ func sum_by_key{range_check_ptr}(list : KeyValue*, size) -> (
         dict_accesses_end=dict_end,
         squashed_dict=squashed_dict)
     # Store range_check_ptr in a local variable to make it
-    # accessible after the call to output_initial_values().
+    # accessible after the call to verify_and_output_squashed_dict().
     local range_check_ptr = range_check_ptr
 
 
