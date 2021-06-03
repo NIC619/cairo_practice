@@ -1,4 +1,9 @@
+import os
 import json
+
+DIR = os.path.dirname(__file__)
+file_name = "voting_input2.json"
+file_path = os.path.join(DIR, file_name)
 
 from starkware.crypto.signature.signature import pedersen_hash, sign
 
@@ -23,6 +28,6 @@ input_data['votes'] = [{
     's': hex(s),
 }]
 
-with open('voting_input2.json', 'w') as f:
+with open(file_name, 'w') as f:
     json.dump(input_data, f, indent=4)
     f.write('\n')
