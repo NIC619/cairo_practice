@@ -40,7 +40,7 @@
 ``` 
 - generate transaction signatures: `python practices/fill_order/utils/gen_tx_signatures.py`
     - this will add "r_a", "s_a", "r_b" and "s_b" to `first_batch_input.json`
-- run the program with first batch of transactions: `cairo-run --program=fill_order_compiled.json --print_output --layout=small --program_input=practices/fill_order/first_batch_input.json`
+- run the program with first batch of transactions: `cairo-run --program=fill_order_compiled.json --print_output --layout=small --program_input=practices/fill_order/first_batch_input.json --cairo_pie_output practices/fill_order/fill_order_pie`
     - output should be:
     ```
     Taker (id: 0) swap 100000 token a for 10000 token b from maker (id: 5).
@@ -64,3 +64,7 @@
         - note that the pre state tree roots (`-1793547045450189420465008794399193691118550335168646972065475902807832761418 (mod p)` and `1824955743215941793232313988695876414504556880162949727907616153328039259063 (mod p)`) are the same
             - same for post state roots
         - this script will also generate a post state in `first_batch_input.json`, you can use this post state as the pre state for `second_batch_input.json` and add your transactions
+    - `--cairo_pie_output` will output a cairo pie file which contains the information you need to generate proof
+        - this pie file can be sent to SHARP with command `cairo-sharp submit --cairo_pie PIE_FILE_NAME`
+    - you can run `python practices/fill_order/utils/compute_output_and_fact.py` to output program hash, program output and the fact for this round of execution
+        - NOTE: program hash will be the same as long as the cairo program remains unchanged, however, fact will change based on the outputs each time
