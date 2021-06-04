@@ -51,7 +51,7 @@ func swap{
         print(
             f'Swap: Account {ids.transaction.token_a_sender_account_id} '
             f'swap {ids.amount_a} token a for '
-            f'{ids.amount_b} token b from {ids.transaction.token_b_sender_account_id}.')
+            f'{ids.amount_b} token b from account {ids.transaction.token_b_sender_account_id}.')
     %}
 
     return (state=state)

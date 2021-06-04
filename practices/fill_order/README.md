@@ -36,11 +36,11 @@
 ``` 
 - generate transaction signatures: `python practices/fill_order/utils/gen_tx_signatures.py`
     - this will add "r_a", "s_a", "r_b" and "s_b" to `first_batch_input.json`
-- run the program with first batch of transactions: `cairo-run --program=fill_order_compiled.json --print_output --print_info --layout=small --program_input=practices/fill_order/first_batch_input.json`
+- run the program with first batch of transactions: `cairo-run --program=fill_order_compiled.json --print_output --layout=small --program_input=practices/fill_order/first_batch_input.json`
     - output should be:
     ```
-    Swap: Account 0 swap 10 token a for 1 token b from 5.
-    Swap: Account 5 swap 50 token a for 3 token b from 0.
+    Swap: Account 0 swap 10 token a for 1 token b from account 5.
+    Swap: Account 5 swap 50 token a for 3 token b from account 0.
     Program output:
         1623843059552719529035128991656293157653125704527498585135265290095705290904
         -1753022439135998450053725626254703968621217431619206483100904701965514789763
@@ -55,5 +55,5 @@
         post_state:
         tree root: 1865480349530132763643597156840366137001889783712390216872187354170357230718
         ```
-        - note that `1753022439135998450053725626254703968621217431619206483100904701965514789763 (mod p)` is equivalent to `1865480349530132763643597156840366137001889783712390216872187354170357230718 (mod p)`
-    - the script will also generate a post state in `first_batch_input.json`, you can use this post state as the pre state for `second_batch_input.json` and add more transactions
+        - note that the post state tree roots (`-1753022439135998450053725626254703968621217431619206483100904701965514789763 (mod p)` and `1865480349530132763643597156840366137001889783712390216872187354170357230718 (mod p)`) are the same
+        - this script will also generate a post state in `first_batch_input.json`, you can use this post state as the pre state for `second_batch_input.json` and add your transactions
