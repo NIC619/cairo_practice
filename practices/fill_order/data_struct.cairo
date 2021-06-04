@@ -35,6 +35,10 @@ end
 struct BatchOutput:
     # The account Merkle roots before and after applying
     # the batch.
+    member fee_token_a_balance_before : felt
+    member fee_token_b_balance_before : felt
     member account_root_before : felt
+    member fee_token_a_balance_after : felt
+    member fee_token_b_balance_after : felt
     member account_root_after : felt
 end

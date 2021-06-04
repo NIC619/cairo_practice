@@ -89,6 +89,13 @@ func main{
     assert state.account_dict_start = account_dict
     assert state.account_dict_end = account_dict
 
+    let output = cast(output_ptr, BatchOutput*)
+    let output_ptr = output_ptr + BatchOutput.SIZE
+
+    # Write fee balances before to the output
+    assert output.fee_token_a_balance_before = state.fee_account.token_a_balance
+    assert output.fee_token_b_balance_before = state.fee_account.token_b_balance
+
     # Execute the transactions.
     let (transactions, n_transactions) = get_transactions()
     let (state : State) = transaction_loop(
@@ -98,9 +105,9 @@ func main{
 
     local ecdsa_ptr : SignatureBuiltin* = ecdsa_ptr
 
-    let output = cast(output_ptr, BatchOutput*)
-    let output_ptr = output_ptr + BatchOutput.SIZE
-
+    # Write fee balances after to the output
+    assert output.fee_token_a_balance_after = state.fee_account.token_a_balance
+    assert output.fee_token_b_balance_after = state.fee_account.token_b_balance
     # Write the Merkle roots to the output.
     let (root_before, root_after) = compute_merkle_roots(
         state=state)
