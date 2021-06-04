@@ -1,6 +1,7 @@
-%builtins output pedersen range_check
+%builtins output pedersen range_check ecdsa
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.cairo_builtins import (
+    HashBuiltin, SignatureBuiltin)
 from starkware.cairo.common.dict import (
     DictAccess, dict_new, dict_squash, dict_update)
 
@@ -20,8 +21,12 @@ func get_transactions() -> (
             [
                 transaction['token_a_sender_account_id'],
                 transaction['token_a_amount'],
+                int(transaction['r_a'], 16),
+                int(transaction['s_a'], 16),
                 transaction['token_b_sender_account_id'],
                 transaction['token_b_amount'],
+                int(transaction['r_b'], 16),
+                int(transaction['s_b'], 16),
             ]
             for transaction in program_input['transactions']
         ]
@@ -59,7 +64,7 @@ end
 
 func main{
         output_ptr : felt*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}():
+        range_check_ptr, ecdsa_ptr : SignatureBuiltin*}():
     alloc_locals
 
     # Create the initial state.
@@ -75,6 +80,8 @@ func main{
         state=state,
         transactions=transactions,
         n_transactions=n_transactions)
+
+    local ecdsa_ptr : SignatureBuiltin* = ecdsa_ptr
 
     let output = cast(output_ptr, BatchOutput*)
     let output_ptr = output_ptr + BatchOutput.SIZE

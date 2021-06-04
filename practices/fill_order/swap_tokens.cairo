@@ -1,11 +1,17 @@
+from starkware.cairo.common.cairo_builtins import (
+    HashBuiltin, SignatureBuiltin)
 from starkware.cairo.common.math import (
     assert_nn_le, assert_not_equal, unsigned_div_rem)
 
 from practices.fill_order.data_struct import (
     Account, State, MAX_BALANCE, SwapTransaction)
 from practices.fill_order.update_account import update_account
+from practices.fill_order.verify_tx_signature import verify_tx_signature
 
-func swap{range_check_ptr}(
+func swap{
+        range_check_ptr,
+        pedersen_ptr : HashBuiltin*,
+        ecdsa_ptr : SignatureBuiltin*}(
         state : State, transaction : SwapTransaction*) -> (
         state : State):
     alloc_locals
@@ -28,39 +34,33 @@ func swap{range_check_ptr}(
         amount_a_diff=-amount_a,
         amount_b_diff=amount_b)
 
-    # TODO:
-    # Here you should verify the user has signed on a message
-    # specifying that they would like to sell 'amount_a' tokens of
-    # type token_a. You should use the public key returned by
-    # update_account().
-
     let (state, pub_key_b) = update_account(
         state=state,
         account_id=transaction.token_b_sender_account_id,
         amount_a_diff=amount_a,
         amount_b_diff=-amount_b)
 
-    # TODO:
-    # Also verify user b' message
+    verify_tx_signature(
+        transaction,
+        pub_key_a,
+        pub_key_b)
 
     %{
         # Print the transaction values using a hint, for
         # debugging purposes.
         print(
             f'Swap: Account {ids.transaction.token_a_sender_account_id} '
-            f'gave {ids.amount_a} tokens of type token_a and '
-            f'received {ids.amount_b} tokens of type token_b.')
-        
-        print(
-            f'Swap: Account {ids.transaction.token_b_sender_account_id} '
-            f'gave {ids.amount_b} tokens of type token_a and '
-            f'received {ids.amount_a} tokens of type token_b.')
+            f'swap {ids.amount_a} token a for '
+            f'{ids.amount_b} token b from {ids.transaction.token_b_sender_account_id}.')
     %}
 
     return (state=state)
 end
 
-func transaction_loop{range_check_ptr}(
+func transaction_loop{
+        range_check_ptr,
+        pedersen_ptr : HashBuiltin*,
+        ecdsa_ptr : SignatureBuiltin*}(
         state : State, transactions : SwapTransaction**,
         n_transactions) -> (state : State):
     if n_transactions == 0:
