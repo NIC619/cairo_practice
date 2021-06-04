@@ -3,6 +3,9 @@ from starkware.cairo.common.dict import DictAccess
 # The maximum amount of token.
 const MAX_BALANCE = %[ 2**64 - 1 %]
 
+const BPS = 10000
+const FEE_BPS = 30
+
 struct Account:
     member public_key : felt
     member token_a_balance : felt
@@ -10,6 +13,7 @@ struct Account:
 end
 
 struct State:
+    member fee_account : Account*
     # A dictionary that tracks the accounts' state.
     member account_dict_start : DictAccess*
     member account_dict_end : DictAccess*

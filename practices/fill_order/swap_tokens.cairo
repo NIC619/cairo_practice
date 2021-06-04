@@ -4,8 +4,9 @@ from starkware.cairo.common.math import (
     assert_nn_le, assert_not_equal, unsigned_div_rem)
 
 from practices.fill_order.data_struct import (
-    Account, State, MAX_BALANCE, SwapTransaction)
-from practices.fill_order.update_account import update_account
+    BPS, FEE_BPS, MAX_BALANCE, Account, State, SwapTransaction)
+from practices.fill_order.update_account import (
+    update_account, update_fee_account)
 from practices.fill_order.verify_tx_signature import verify_tx_signature
 
 func swap{
@@ -27,18 +28,27 @@ func swap{
     assert_nn_le(amount_a, MAX_BALANCE)
     assert_nn_le(amount_b, MAX_BALANCE)
 
+    # Extract fee
+    let (fee_b, _) = unsigned_div_rem((amount_b * FEE_BPS), BPS)
+    assert_nn_le(fee_b, MAX_BALANCE)
+
     # Update the users' account.
     let (state, pub_key_a) = update_account(
         state=state,
         account_id=transaction.taker_account_id,
         amount_a_diff=-amount_a,
-        amount_b_diff=amount_b)
+        amount_b_diff=(amount_b - fee_b))
 
     let (state, pub_key_b) = update_account(
         state=state,
         account_id=transaction.maker_account_id,
         amount_a_diff=amount_a,
         amount_b_diff=-amount_b)
+
+    let (state) = update_fee_account(
+        state=state,
+        amount_a_diff=0,
+        amount_b_diff=fee_b)
 
     verify_tx_signature(
         transaction,

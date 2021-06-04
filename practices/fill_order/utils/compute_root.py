@@ -8,8 +8,12 @@ DIR = os.path.dirname(__file__)
 from starkware.cairo.lang.vm.crypto import pedersen_hash
 from starkware.cairo.common.small_merkle_tree import MerkleTree
 
+BPS = 10000
+FEE_BPS = 30
+
 def state_transition(pre_state, transactions):
     accounts = pre_state["accounts"]
+    fee = pre_state["fee"]
     for transaction in transactions:
         taker_id = str(transaction["taker_account_id"])
         token_a_send_amount = transaction["token_a_amount"]
@@ -24,12 +28,14 @@ def state_transition(pre_state, transactions):
         maker_balance = maker["token_b_balance"]
         assert maker_balance >= token_b_send_amount
 
+        fee_b_amount = (token_b_send_amount * FEE_BPS) // BPS
+        
         accounts[taker_id]["token_a_balance"] -= token_a_send_amount
-        accounts[taker_id]["token_b_balance"] += token_b_send_amount
+        accounts[taker_id]["token_b_balance"] += (token_b_send_amount - fee_b_amount)
         accounts[maker_id]["token_a_balance"] += token_a_send_amount
         accounts[maker_id]["token_b_balance"] -= token_b_send_amount
+        fee["token_b_balance"] += fee_b_amount
     post_state = pre_state
-    post_state["accounts"] = accounts
     return post_state
 
 def hash_account(pub_key, balances):

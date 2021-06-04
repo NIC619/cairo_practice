@@ -1,5 +1,6 @@
 %builtins output pedersen range_check ecdsa
 
+from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import (
     HashBuiltin, SignatureBuiltin)
 from starkware.cairo.common.dict import (
@@ -38,6 +39,18 @@ func get_transactions() -> (
         n_transactions=n_transactions)
 end
 
+func get_fee_account() -> (fee_account : Account*):
+    alloc_locals
+    let (local fee_account : Account*) = alloc()
+    %{
+        pre_state = program_input['pre_state']
+        ids.fee_account.public_key = 0
+        ids.fee_account.token_a_balance = pre_state["fee"]["token_a_balance"]
+        ids.fee_account.token_b_balance = pre_state["fee"]["token_b_balance"]
+    %}
+    return(fee_account=fee_account)
+end
+
 func get_account_dict() -> (account_dict : DictAccess*):
     alloc_locals
     %{
@@ -70,7 +83,9 @@ func main{
     # Create the initial state.
     local state : State
 
+    let (fee_account) = get_fee_account()
     let (account_dict) = get_account_dict()
+    assert state.fee_account = fee_account
     assert state.account_dict_start = account_dict
     assert state.account_dict_end = account_dict
 
@@ -79,7 +94,7 @@ func main{
     let (state : State) = transaction_loop(
         state=state,
         transactions=transactions,
-        n_transactions=n_transactions)
+        n_transactions=n_transactions)      
 
     local ecdsa_ptr : SignatureBuiltin* = ecdsa_ptr
 
