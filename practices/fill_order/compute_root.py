@@ -1,10 +1,9 @@
 import os
 import json
 import sys
+import copy
 
 DIR = os.path.dirname(__file__)
-file_name = "first_batch_input.json"
-file_path = os.path.join(DIR, file_name)
 
 from starkware.cairo.common.hash_chain import compute_hash_chain
 from starkware.cairo.lang.vm.crypto import pedersen_hash
@@ -60,6 +59,8 @@ def compute_merkle_root(account_ids, account_hashes):
     print(f'tree root: {tree.compute_merkle_root(account_hash_pairs)}')
 
 def main():
+    file_name = input("input file name: ")
+    file_path = os.path.join(DIR, file_name + ".json")
     input_data = json.load(open(file_path))
     pre_state = input_data["pre_state"]
 
@@ -68,7 +69,7 @@ def main():
 
     transactions = input_data["transactions"]
 
-    post_state = state_transition(pre_state.copy, transactions)
+    post_state = state_transition(copy.deepcopy(pre_state), transactions)
 
     account_ids, account_hashes = compute_account_id_and_hashes(post_state["accounts"])    
     compute_merkle_root(account_ids, account_hashes)
