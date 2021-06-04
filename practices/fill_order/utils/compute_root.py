@@ -5,7 +5,6 @@ import copy
 
 DIR = os.path.dirname(__file__)
 
-from starkware.cairo.common.hash_chain import compute_hash_chain
 from starkware.cairo.lang.vm.crypto import pedersen_hash
 from starkware.cairo.common.small_merkle_tree import MerkleTree
 
@@ -60,7 +59,7 @@ def compute_merkle_root(account_ids, account_hashes):
 
 def main():
     file_name = input("input file name: ")
-    file_path = os.path.join(DIR, file_name + ".json")
+    file_path = os.path.join(DIR, "../" + file_name + ".json")
     input_data = json.load(open(file_path))
     pre_state = input_data["pre_state"]
 

@@ -2,7 +2,7 @@ import os
 import json
 
 DIR = os.path.dirname(__file__)
-file_name = "voting_input2.json"
+file_name = "../voting_input2.json"
 file_path = os.path.join(DIR, file_name)
 
 from starkware.crypto.signature.signature import pedersen_hash, sign

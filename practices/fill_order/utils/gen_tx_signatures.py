@@ -25,7 +25,7 @@ def compute_tx_hash(sender_a_id, a_amount, sender_b_id, b_amount):
 def main():
     keys = read_keys()
     file_name = input("input file name: ")
-    file_path = os.path.join(DIR, file_name + ".json")
+    file_path = os.path.join(DIR, "../" + file_name + ".json")
     input_data = json.load(open(file_path))
     txs = input_data["transactions"]
 

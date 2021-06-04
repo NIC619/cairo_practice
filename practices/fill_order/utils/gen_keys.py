@@ -2,7 +2,7 @@ import os
 import json
 
 DIR = os.path.dirname(__file__)
-file_name = "keys.json"
+file_name = "../keys.json"
 file_path = os.path.join(DIR, file_name)
 
 from starkware.crypto.signature.signature import private_to_stark_key
