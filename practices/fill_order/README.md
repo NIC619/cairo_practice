@@ -8,28 +8,28 @@
         "accounts": {
             "0": {
                 "public_key": "0x1c3eb6d67f833a9dac3766b2f22d31299875884f3fc84ebc70c322e8fb18112",
-                "token_a_balance": 100,
-                "token_b_balance": 500
+                "token_a_balance": 1000000,
+                "token_b_balance": 5000000
             },
             "5": {
                 "public_key": "0x4cb42f213ed6dcfadb7b987fd31b2260334cbe404315708d17a2404fbadb11e",
-                "token_a_balance": 750,
-                "token_b_balance": 20
+                "token_a_balance": 7500000,
+                "token_b_balance": 200000
             }
         }
     },
     "transactions": [
         {
             "taker_account_id": 0,
-            "token_a_amount": 10,
+            "token_a_amount": 100000,
             "maker_account_id": 5,
-            "token_b_amount": 1,
+            "token_b_amount": 10000,
         },
         {
             "taker_account_id": 5,
-            "token_a_amount": 50,
+            "token_a_amount": 500000,
             "maker_account_id": 0,
-            "token_b_amount": 3,
+            "token_b_amount": 30000,
         }
     ]
 }

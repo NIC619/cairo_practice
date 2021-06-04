@@ -8,7 +8,7 @@ from starkware.crypto.signature.signature import (
     pedersen_hash, sign)
 
 def read_keys():
-    file_name = "keys.json"
+    file_name = "../keys.json"
     file_path = os.path.join(DIR, file_name)
     return json.load(open(file_path))
 
