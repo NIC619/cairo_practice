@@ -11,23 +11,23 @@ from starkware.cairo.common.small_merkle_tree import MerkleTree
 def state_transition(pre_state, transactions):
     accounts = pre_state["accounts"]
     for transaction in transactions:
-        token_a_sender_id = str(transaction["token_a_sender_account_id"])
+        taker_id = str(transaction["taker_account_id"])
         token_a_send_amount = transaction["token_a_amount"]
-        token_b_sender_id = str(transaction["token_b_sender_account_id"])
+        maker_id = str(transaction["maker_account_id"])
         token_b_send_amount = transaction["token_b_amount"]
 
-        token_a_sender = accounts[token_a_sender_id]
-        token_a_sender_balance = token_a_sender["token_a_balance"]
-        assert token_a_sender_balance >= token_a_send_amount
+        taker = accounts[taker_id]
+        taker_balance = taker["token_a_balance"]
+        assert taker_balance >= token_a_send_amount
 
-        token_b_sender = accounts[token_b_sender_id]
-        token_b_sender_balance = token_b_sender["token_b_balance"]
-        assert token_b_sender_balance >= token_b_send_amount
+        maker = accounts[maker_id]
+        maker_balance = maker["token_b_balance"]
+        assert maker_balance >= token_b_send_amount
 
-        accounts[token_a_sender_id]["token_a_balance"] -= token_a_send_amount
-        accounts[token_a_sender_id]["token_b_balance"] += token_b_send_amount
-        accounts[token_b_sender_id]["token_a_balance"] += token_a_send_amount
-        accounts[token_b_sender_id]["token_b_balance"] -= token_b_send_amount
+        accounts[taker_id]["token_a_balance"] -= token_a_send_amount
+        accounts[taker_id]["token_b_balance"] += token_b_send_amount
+        accounts[maker_id]["token_a_balance"] += token_a_send_amount
+        accounts[maker_id]["token_b_balance"] -= token_b_send_amount
     post_state = pre_state
     post_state["accounts"] = accounts
     return post_state

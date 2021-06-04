@@ -20,15 +20,15 @@
     },
     "transactions": [
         {
-            "token_a_sender_account_id": 0,
+            "taker_account_id": 0,
             "token_a_amount": 10,
-            "token_b_sender_account_id": 5,
+            "maker_account_id": 5,
             "token_b_amount": 1,
         },
         {
-            "token_a_sender_account_id": 5,
+            "taker_account_id": 5,
             "token_a_amount": 50,
-            "token_b_sender_account_id": 0,
+            "maker_account_id": 0,
             "token_b_amount": 3,
         }
     ]
@@ -39,8 +39,8 @@
 - run the program with first batch of transactions: `cairo-run --program=fill_order_compiled.json --print_output --layout=small --program_input=practices/fill_order/first_batch_input.json`
     - output should be:
     ```
-    Swap: Account 0 swap 10 token a for 1 token b from account 5.
-    Swap: Account 5 swap 50 token a for 3 token b from account 0.
+    Taker (id: 0) swap 10 token a for 1 token b from maker (id: 5).
+    Taker (id: 5) swap 50 token a for 3 token b from maker (id: 0).
     Program output:
         1623843059552719529035128991656293157653125704527498585135265290095705290904
         -1753022439135998450053725626254703968621217431619206483100904701965514789763

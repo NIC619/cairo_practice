@@ -21,8 +21,8 @@ func swap{
 
     # Check that account id are not the same
     assert_not_equal(
-        transaction.token_a_sender_account_id,
-        transaction.token_b_sender_account_id)
+        transaction.taker_account_id,
+        transaction.maker_account_id)
     # Check that amount_a and amount_b are in range.
     assert_nn_le(amount_a, MAX_BALANCE)
     assert_nn_le(amount_b, MAX_BALANCE)
@@ -30,13 +30,13 @@ func swap{
     # Update the users' account.
     let (state, pub_key_a) = update_account(
         state=state,
-        account_id=transaction.token_a_sender_account_id,
+        account_id=transaction.taker_account_id,
         amount_a_diff=-amount_a,
         amount_b_diff=amount_b)
 
     let (state, pub_key_b) = update_account(
         state=state,
-        account_id=transaction.token_b_sender_account_id,
+        account_id=transaction.maker_account_id,
         amount_a_diff=amount_a,
         amount_b_diff=-amount_b)
 
@@ -49,9 +49,9 @@ func swap{
         # Print the transaction values using a hint, for
         # debugging purposes.
         print(
-            f'Swap: Account {ids.transaction.token_a_sender_account_id} '
+            f'Taker (id: {ids.transaction.taker_account_id}) '
             f'swap {ids.amount_a} token a for '
-            f'{ids.amount_b} token b from account {ids.transaction.token_b_sender_account_id}.')
+            f'{ids.amount_b} token b from maker (id: {ids.transaction.maker_account_id}).')
     %}
 
     return (state=state)

@@ -19,11 +19,11 @@ func get_transactions() -> (
     %{
         transactions = [
             [
-                transaction['token_a_sender_account_id'],
+                transaction['taker_account_id'],
                 transaction['token_a_amount'],
                 int(transaction['r_a'], 16),
                 int(transaction['s_a'], 16),
-                transaction['token_b_sender_account_id'],
+                transaction['maker_account_id'],
                 transaction['token_b_amount'],
                 int(transaction['r_b'], 16),
                 int(transaction['s_b'], 16),

@@ -8,15 +8,15 @@ from practices.fill_order.data_struct import SwapTransaction
 
 # Returns a hash committing to the transaction using the
 # following formula:
-#   H(H(token_a_sender, token_a_amount), H(token_b_sender, token_b_amount)).
+#   H(H(taker, token_a_amount), H(maker, token_b_amount)).
 # where H is the Pedersen hash function.
 func hash_transaction{pedersen_ptr : HashBuiltin*}(
         transaction : SwapTransaction*) -> (res : felt):
     let (a_hash) = hash2{hash_ptr=pedersen_ptr}(
-        transaction.token_a_sender_account_id,
+        transaction.taker_account_id,
         transaction.token_a_amount)
     let (b_hash) = hash2{hash_ptr=pedersen_ptr}(
-        transaction.token_b_sender_account_id,
+        transaction.maker_account_id,
         transaction.token_b_amount)
     let (res) = hash2{hash_ptr=pedersen_ptr}(
         a_hash, b_hash)

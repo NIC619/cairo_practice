@@ -30,25 +30,25 @@ def main():
     txs = input_data["transactions"]
 
     for tx in txs:
-        token_a_sender_id = str(tx["token_a_sender_account_id"])
+        taker_id = str(tx["taker_account_id"])
         token_a_send_amount = tx["token_a_amount"]
-        token_b_sender_id = str(tx["token_b_sender_account_id"])
+        maker_id = str(tx["maker_account_id"])
         token_b_send_amount = tx["token_b_amount"]
         tx_hash = compute_tx_hash(
-            token_a_sender_id,
+            taker_id,
             token_a_send_amount,
-            token_b_sender_id,
+            maker_id,
             token_b_send_amount)
 
         r, s = sign(
             msg_hash=tx_hash,
-            priv_key=keys[token_a_sender_id]["private_key"])
+            priv_key=keys[taker_id]["private_key"])
         tx["r_a"] = hex(r)
         tx["s_a"] = hex(s)
 
         r, s = sign(
             msg_hash=tx_hash,
-            priv_key=keys[token_b_sender_id]["private_key"])
+            priv_key=keys[maker_id]["private_key"])
         tx["r_b"] = hex(r)
         tx["s_b"] = hex(s)
 

@@ -17,11 +17,11 @@ end
 
 # Represents a swap transaction between two users.
 struct SwapTransaction:
-    member token_a_sender_account_id : felt
+    member taker_account_id : felt
     member token_a_amount : felt
     member r_a : felt
     member s_a : felt
-    member token_b_sender_account_id : felt
+    member maker_account_id : felt
     member token_b_amount : felt
     member r_b : felt
     member s_b : felt
