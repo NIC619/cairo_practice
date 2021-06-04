@@ -46,15 +46,15 @@ def compute_account_id_and_hashes(accounts):
         balances = []
         balances.append(int(acct["token_a_balance"]))
         balances.append(int(acct["token_b_balance"]))
-        print(f'account id {acct_id}: {acct["public_key"]}, {balances}')
+        # print(f'account id {acct_id}: {acct["public_key"]}, {balances}')
         account_hashes.append(hash_account(acct["public_key"], balances))
-    print(f'account hashes: {account_hashes}')
+    # print(f'account hashes: {account_hashes}')
     return account_ids, account_hashes
 
 def compute_merkle_root(account_ids, account_hashes):
     tree = MerkleTree(tree_height=10, default_leaf=0)
     account_hash_pairs = list(zip(account_ids, account_hashes))
-    print(f'account hash pairs: {account_hash_pairs}')
+    # print(f'account hash pairs: {account_hash_pairs}')
     print(f'tree root: {tree.compute_merkle_root(account_hash_pairs)}')
 
 def main():
@@ -63,6 +63,7 @@ def main():
     input_data = json.load(open(file_path))
     pre_state = input_data["pre_state"]
 
+    print("pre_state:")
     account_ids, account_hashes = compute_account_id_and_hashes(pre_state["accounts"])    
     compute_merkle_root(account_ids, account_hashes)
 
@@ -70,6 +71,7 @@ def main():
 
     post_state = state_transition(copy.deepcopy(pre_state), transactions)
 
+    print("\npost_state:")
     account_ids, account_hashes = compute_account_id_and_hashes(post_state["accounts"])    
     compute_merkle_root(account_ids, account_hashes)
 
