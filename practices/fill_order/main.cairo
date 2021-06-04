@@ -36,7 +36,8 @@ end
 func get_account_dict() -> (account_dict : DictAccess*):
     alloc_locals
     %{
-        account = program_input['accounts']
+        pre_state = program_input['pre_state']
+        account = pre_state['accounts']
         initial_dict = {
             int(account_id_str): segments.gen_arg([
                 int(info['public_key'], 16),
