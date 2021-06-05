@@ -17,33 +17,56 @@ func swap{
         state : State):
     alloc_locals
 
-    tempvar amount_a = transaction.token_a_amount
-    tempvar amount_b = transaction.token_b_amount
+    tempvar taker_token_amount = transaction.taker_token_amount
+    tempvar maker_token_amount = transaction.maker_token_amount
 
     # Check that account id are not the same
     assert_not_equal(
         transaction.taker_account_id,
         transaction.maker_account_id)
-    # Check that amount_a and amount_b are in range.
-    assert_nn_le(amount_a, MAX_BALANCE)
-    assert_nn_le(amount_b, MAX_BALANCE)
+    # Check that amounts are in range.
+    assert_nn_le(taker_token_amount, MAX_BALANCE)
+    assert_nn_le(maker_token_amount, MAX_BALANCE)
 
     # Extract fee
-    let (fee_b, _) = unsigned_div_rem((amount_b * FEE_BPS), BPS)
+    let (fee_b, _) = unsigned_div_rem((maker_token_amount * FEE_BPS), BPS)
     assert_nn_le(fee_b, MAX_BALANCE)
 
     # Update the users' account.
+    %{
+        # Print the transaction values using a hint, for
+        # debugging purposes.
+        print(
+            f'Order data:\n'
+            f'--------------------------------------------\n'
+            f'Taker: {ids.transaction.taker_account_id}\n'
+            f'Taker token: {ids.transaction.taker_token_id}\n'
+            f'Taker token amount: {ids.taker_token_amount}\n'
+            f'Maker: {ids.transaction.maker_account_id}\n'
+            f'Maker token: {ids.transaction.maker_token_id}\n'
+            f'Maker token amount: {ids.maker_token_amount}\n'
+            f'--------------------------------------------')
+        print(f'fee charged for maker token ({ids.transaction.maker_token_id}): {ids.fee_b}')
+        print(f'update taker ({ids.transaction.taker_account_id}) account')
+    %}
     let (state, pub_key_a) = update_account(
         state=state,
         account_id=transaction.taker_account_id,
-        amount_a_diff=-amount_a,
-        amount_b_diff=(amount_b - fee_b))
+        token_a_id=transaction.taker_token_id,
+        amount_a_diff=-taker_token_amount,
+        token_b_id=transaction.maker_token_id,
+        amount_b_diff=(maker_token_amount - fee_b))
 
+    %{
+        print(f'update maker ({ids.transaction.maker_account_id}) account')
+    %}
     let (state, pub_key_b) = update_account(
         state=state,
         account_id=transaction.maker_account_id,
-        amount_a_diff=amount_a,
-        amount_b_diff=-amount_b)
+        token_a_id=transaction.taker_token_id,
+        amount_a_diff=taker_token_amount,
+        token_b_id=transaction.maker_token_id,
+        amount_b_diff=-maker_token_amount)
 
     verify_tx_signature(
         transaction,
@@ -54,15 +77,6 @@ func swap{
     let output = cast(output_ptr, FeeOutput*)
     let output_ptr = output_ptr + FeeOutput.SIZE
     assert output.amount = fee_b
-
-    %{
-        # Print the transaction values using a hint, for
-        # debugging purposes.
-        print(
-            f'Taker (id: {ids.transaction.taker_account_id}) '
-            f'swap {ids.amount_a} token a for '
-            f'{ids.amount_b} token b from maker (id: {ids.transaction.maker_account_id}).')
-    %}
 
     return (state=state)
 end
