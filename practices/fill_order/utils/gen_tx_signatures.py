@@ -17,10 +17,16 @@ def read_txs(file_name):
     input_data = json.load(open(file_path))
     return input_data["transactions"]
 
-def compute_tx_hash(sender_a_id, a_amount, sender_b_id, b_amount):
-    a_hash = pedersen_hash(int(sender_a_id), a_amount)
-    b_hash = pedersen_hash(int(sender_b_id), b_amount)
-    return pedersen_hash(a_hash, b_hash)
+def compute_tx_hash(taker_id, taker_token_id, taker_token_amount, maker_id, maker_token_id, maker_token_amount):
+    taker_hash = pedersen_hash(
+        pedersen_hash(int(taker_id), taker_token_id),
+        taker_token_amount
+    )
+    maker_hash = pedersen_hash(
+        pedersen_hash(int(maker_id), maker_token_id),
+        maker_token_amount
+    )
+    return pedersen_hash(taker_hash, maker_hash)
 
 def main():
     keys = read_keys()
@@ -31,14 +37,18 @@ def main():
 
     for tx in txs:
         taker_id = str(tx["taker_account_id"])
-        token_a_send_amount = tx["token_a_amount"]
+        taker_token_id = tx["taker_token_id"]
+        taker_token_amount = tx["taker_token_amount"]
         maker_id = str(tx["maker_account_id"])
-        token_b_send_amount = tx["token_b_amount"]
+        maker_token_id = tx["maker_token_id"]
+        maker_token_amount = tx["maker_token_amount"]
         tx_hash = compute_tx_hash(
             taker_id,
-            token_a_send_amount,
+            taker_token_id,
+            taker_token_amount,
             maker_id,
-            token_b_send_amount)
+            maker_token_id,
+            maker_token_amount)
 
         r, s = sign(
             msg_hash=tx_hash,
