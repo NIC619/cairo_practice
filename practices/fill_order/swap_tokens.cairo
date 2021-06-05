@@ -4,12 +4,12 @@ from starkware.cairo.common.math import (
     assert_nn_le, assert_not_equal, unsigned_div_rem)
 
 from practices.fill_order.data_struct import (
-    BPS, FEE_BPS, MAX_BALANCE, Account, State, SwapTransaction)
-from practices.fill_order.update_account import (
-    update_account, update_fee_account)
+    BPS, FEE_BPS, FeeOutput, MAX_BALANCE, Account, State, SwapTransaction)
+from practices.fill_order.update_account import update_account
 from practices.fill_order.verify_tx_signature import verify_tx_signature
 
 func swap{
+        output_ptr : felt*,
         range_check_ptr,
         pedersen_ptr : HashBuiltin*,
         ecdsa_ptr : SignatureBuiltin*}(
@@ -45,15 +45,15 @@ func swap{
         amount_a_diff=amount_a,
         amount_b_diff=-amount_b)
 
-    let (state) = update_fee_account(
-        state=state,
-        amount_a_diff=0,
-        amount_b_diff=fee_b)
-
     verify_tx_signature(
         transaction,
         pub_key_a,
         pub_key_b)
+
+    # Write the fee amount to the output.
+    let output = cast(output_ptr, FeeOutput*)
+    let output_ptr = output_ptr + FeeOutput.SIZE
+    assert output.amount = fee_b
 
     %{
         # Print the transaction values using a hint, for
@@ -68,6 +68,7 @@ func swap{
 end
 
 func transaction_loop{
+        output_ptr : felt*,
         range_check_ptr,
         pedersen_ptr : HashBuiltin*,
         ecdsa_ptr : SignatureBuiltin*}(

@@ -41,42 +41,9 @@ func update_account{range_check_ptr}(
 
     # Construct and return the new state.
     local new_state : State
-    assert new_state.fee_account = state.fee_account
     assert new_state.account_dict_start = (
         state.account_dict_start)
     assert new_state.account_dict_end = account_dict_end
 
     return (state=new_state, pub_key=old_account.public_key)
-end
-
-func update_fee_account{range_check_ptr}(
-        state : State, amount_a_diff, amount_b_diff) -> (
-        state : State):
-    alloc_locals
-
-    # Compute the new account values.
-    tempvar new_token_a_balance = (
-        state.fee_account.token_a_balance + amount_a_diff)
-    tempvar new_token_b_balance = (
-        state.fee_account.token_b_balance + amount_b_diff)
-
-    # Verify that the new balances are positive.
-    assert_nn_le(new_token_a_balance, MAX_BALANCE)
-    assert_nn_le(new_token_b_balance, MAX_BALANCE)
-
-    # Create a new Account instance.
-    local new_account : Account
-    assert new_account.public_key = state.fee_account.public_key
-    assert new_account.token_a_balance = new_token_a_balance
-    assert new_account.token_b_balance = new_token_b_balance
-
-    # Construct and return the new state.
-    let (__fp__, _) = get_fp_and_pc()
-    local new_state : State
-    assert new_state.fee_account = &new_account
-    assert new_state.account_dict_start = (
-        state.account_dict_start)
-    assert new_state.account_dict_end = state.account_dict_end
-
-    return (state=new_state)
 end

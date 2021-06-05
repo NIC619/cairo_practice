@@ -46,9 +46,12 @@
     Taker (id: 0) swap 100000 token a for 10000 token b from maker (id: 5).
     Taker (id: 5) swap 500000 token a for 30000 token b from maker (id: 0).
     Program output:
+        30
+        90
         -1793547045450189420465008794399193691118550335168646972065475902807832761418
         -658335224952559810746362139420985511635567786865116305324955372878154660426
     ```
+    - `30` and `90` are the fees collected
     - `-1793547045450189420465008794399193691118550335168646972065475902807832761418` is the pre state root
     - `-658335224952559810746362139420985511635567786865116305324955372878154660426` is the post state root
     - you can run `python practices/fill_order/utils/compute_root.py` and input `first_batch_input` to see the produced pre/post state tree roots
