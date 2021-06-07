@@ -52,8 +52,8 @@ def compute_account_hash(public_key_hex, tokens):
     token_balance_pairs = list(zip(token_ids, token_balances))
     # print(f'token balance pairs: {token_balance_pairs}')
     tree_root = token_balance_tree.compute_merkle_root(token_balance_pairs)
-    print(f'tree root: {tree_root}')
-    print(f'account hash: {pedersen_hash(int(public_key_hex, 16), tree_root)}')
+    # print(f'token balance tree root: {tree_root}')
+    # print(f'account hash: {pedersen_hash(int(public_key_hex, 16), tree_root)}')
     return pedersen_hash(int(public_key_hex, 16), tree_root)
 
 
