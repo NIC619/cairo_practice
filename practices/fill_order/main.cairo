@@ -6,7 +6,7 @@ from starkware.cairo.common.cairo_builtins import (
 from starkware.cairo.common.dict import (
     DictAccess, dict_new, dict_squash, dict_update)
 
-# from practices.fill_order.compute_merkle_roots import compute_merkle_roots
+from practices.fill_order.compute_merkle_roots import compute_merkle_roots
 from practices.fill_order.data_struct import (
     Account, MerkleRootsOutput, State, MAX_BALANCE, SwapTransaction)
 from practices.fill_order.swap_tokens import transaction_loop
@@ -51,6 +51,9 @@ func get_token_balance_dict(account_id : felt) -> (token_balance_dict : DictAcce
             int(token_id_str): balance
             for token_id_str, balance in token_balances.items()
         }
+
+        del account
+        del token_balances
     %}
 
     # Initialize token balance dictionary for the account.
@@ -137,14 +140,15 @@ func main{
 
     local ecdsa_ptr : SignatureBuiltin* = ecdsa_ptr
 
-    # let output = cast(output_ptr, MerkleRootsOutput*)
-    # let output_ptr = output_ptr + MerkleRootsOutput.SIZE
+    let output = cast(output_ptr, MerkleRootsOutput*)
+    let output_ptr = output_ptr + MerkleRootsOutput.SIZE
 
-    # # Write the Merkle roots to the output.
-    # let (root_before, root_after) = compute_merkle_roots(
-    #     state=state)
-    # assert output.account_root_before = root_before
-    # assert output.account_root_after = root_after
+    # Write the Merkle roots to the output.
+    let (root_before, root_after) = compute_merkle_roots(
+        state=state)
+
+    assert output.account_root_before = root_before
+    assert output.account_root_after = root_after
 
     return ()
 end
