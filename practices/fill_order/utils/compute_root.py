@@ -10,8 +10,8 @@ from starkware.cairo.common.small_merkle_tree import MerkleTree
 
 BPS = 10000
 FEE_BPS = 30
-STATE_TREE_HEIGHT = 10
-ACCOUNT_TREE_HEIGHT = 10
+LOG_N_ACCOUNTS = 10
+LOG_N_TOKENS = 10
 
 def state_transition(pre_state, transactions):
     accounts = pre_state["accounts"]
@@ -42,18 +42,19 @@ def state_transition(pre_state, transactions):
     post_state = pre_state
     return post_state
 
-def compute_account_hash(tokens):
+def compute_account_hash(public_key_hex, tokens):
     token_ids = []
     token_balances = []
     for token_id, token_balance in tokens.items():
         token_ids.append(int(token_id))
         token_balances.append(token_balance)
-    tree = MerkleTree(tree_height=ACCOUNT_TREE_HEIGHT, default_leaf=0)
+    token_balance_tree = MerkleTree(tree_height=LOG_N_TOKENS, default_leaf=0)
     token_balance_pairs = list(zip(token_ids, token_balances))
     # print(f'token balance pairs: {token_balance_pairs}')
-    tree_root = tree.compute_merkle_root(token_balance_pairs)
-    # print(f'tree root: {tree_root}')
-    return tree_root
+    tree_root = token_balance_tree.compute_merkle_root(token_balance_pairs)
+    print(f'tree root: {tree_root}')
+    print(f'account hash: {pedersen_hash(int(public_key_hex, 16), tree_root)}')
+    return pedersen_hash(int(public_key_hex, 16), tree_root)
 
 
 def compute_account_id_and_hashes(accounts):
@@ -62,12 +63,12 @@ def compute_account_id_and_hashes(accounts):
     for acct_id, acct in accounts.items():
         account_ids.append(int(acct_id))
         # print(f'account id {acct_id}: {acct["token_balances"]}')
-        account_hashes.append(compute_account_hash(acct["token_balances"]))
+        account_hashes.append(compute_account_hash(acct["public_key"], acct["token_balances"]))
     # print(f'account hashes: {account_hashes}')
     return account_ids, account_hashes
 
 def compute_merkle_root(account_ids, account_hashes):
-    tree = MerkleTree(tree_height=STATE_TREE_HEIGHT, default_leaf=0)
+    tree = MerkleTree(tree_height=LOG_N_ACCOUNTS, default_leaf=0)
     account_hash_pairs = list(zip(account_ids, account_hashes))
     # print(f'account hash pairs: {account_hash_pairs}')
     print(f'tree root: {tree.compute_merkle_root(account_hash_pairs)}')
