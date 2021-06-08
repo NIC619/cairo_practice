@@ -31,6 +31,7 @@ struct SwapTransaction:
     member maker_token_amount : felt
     member r_b : felt
     member s_b : felt
+    member salt : felt
 end
 
 #

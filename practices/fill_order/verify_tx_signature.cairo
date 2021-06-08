@@ -9,10 +9,13 @@ from practices.fill_order.data_struct import (
 
 # Returns a hash committing to the transaction using the
 # following formula:
-#   H(
-#      H(H(taker_account_id, taker_token_id), taker_token_amount)),
-#      H(H(maker_account_id, maker_token_id), token_b_amount))
-#   )
+#     H(
+#         H(
+#             H(H(taker_account_id, taker_token_id), taker_token_amount)),
+#             H(H(maker_account_id, maker_token_id), token_b_amount))
+#         ),
+#         salt
+#     )
 # where H is the Pedersen hash function.
 func hash_transaction{pedersen_ptr : HashBuiltin*}(
         transaction : SwapTransaction*) -> (res : felt):
@@ -29,10 +32,11 @@ func hash_transaction{pedersen_ptr : HashBuiltin*}(
     let (maker_hash) = hash2{hash_ptr=pedersen_ptr}(
         maker_pubkey_and_id_hash,
         transaction.maker_token_amount)
-
-    let (res) = hash2{hash_ptr=pedersen_ptr}(
+    let (taker_maker_hash) = hash2{hash_ptr=pedersen_ptr}(
         taker_hash, maker_hash)
-    return (res=res)
+
+    return hash2{hash_ptr=pedersen_ptr}(
+        taker_maker_hash, transaction.salt)
 end
 
 func verify_tx_signature{

@@ -30,6 +30,7 @@ func get_transactions() -> (
                 transaction['maker_token_amount'],
                 int(transaction['r_b'], 16),
                 int(transaction['s_b'], 16),
+                transaction['salt'],
             ]
             for transaction in program_input['transactions']
         ]
