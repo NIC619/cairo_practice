@@ -21,7 +21,7 @@ func update_token_balance{range_check_ptr}(
 
     %{
         dict_tracker = __dict_manager.get_tracker(ids.token_balance_dict_end)
-        print(f'token {ids.token_id} balance before: {dict_tracker.data[ids.token_id]}')
+        print(f'    token (id {ids.token_id}) balance before: {dict_tracker.data[ids.token_id]}')
     %}
 
     tempvar new_token_balance = token_balance + amount_diff
@@ -33,7 +33,7 @@ func update_token_balance{range_check_ptr}(
 
     %{
         dict_tracker = __dict_manager.get_tracker(ids.token_balance_dict_end)
-        print(f'token {ids.token_id} balance after: {dict_tracker.data[ids.token_id]}')
+        print(f'    token (id {ids.token_id}) balance after: {dict_tracker.data[ids.token_id]}')
     %}
 
     local new_account : Account

@@ -41,10 +41,6 @@
             "maker_account_id": 5,
             "maker_token_id": 133,
             "maker_token_amount": 70000,
-            "r_a": "0x21d530871b3c181d6c03538e96d884f2044c57339af11920b17a68f1c7dad94",
-            "s_a": "0x5c5c49d3ab22706022c12f0e439aa3511450af06b61e4e8a1680413e135e58a",
-            "r_b": "0x619bbe2ced8165f0556acb0e62be46fdad7d37816d3c14656808e80de262bc",
-            "s_b": "0x2d84adc1aca82b89875ce77bc3d4f85a106315e663278d8b817cf072fa93361"
         },
         {
             "taker_account_id": 5,
@@ -53,10 +49,6 @@
             "maker_account_id": 0,
             "maker_token_id": 133,
             "maker_token_amount": 12000,
-            "r_a": "0x3d63dacb9b539612c1bf1924eaa6bc6309090389df4fa4358362e7d9d84912e",
-            "s_a": "0x1e110fc2ea20e931a9d19fa5d820407632c0071e7ca641ce2a0017faea07e6c",
-            "r_b": "0x6ea7dc49b3c4c5bcf79b98bf895276f6ceda8c88327c9614c320c92bfeddb97",
-            "s_b": "0x7e708d2a7e71b2b6fafef518842d6849af601ef015cd449b0223ab211681cc9"
         }
     ]
 }
@@ -66,8 +58,7 @@
 - run the program with first batch of transactions: `cairo-run --program=fill_order_compiled.json --print_output --layout=small --program_input=practices/fill_order/first_batch_input.json --cairo_pie_output practices/fill_order/fill_order_pie`
     - output should be:
     ```
-    Order data:
-    --------------------------------------------
+    Order data ---------------------------------
     Taker: 0
     Taker token: 99
     Taker token amount: 400000
@@ -75,19 +66,20 @@
     Maker token: 133
     Maker token amount: 70000
     --------------------------------------------
-    fee charged for maker token (133): 210
-    update taker (0) account
-    token 99 balance before: 1000000
-    token 99 balance after: 600000
-    token 133 balance before: 5000000
-    token 133 balance after: 5069790
-    update maker (5) account
-    token 99 balance before: 7500000
-    token 99 balance after: 7900000
-    token 133 balance before: 200000
-    token 133 balance after: 130000
-    Order data:
+    Fee charged for maker token (id 133): 210
+    Updating taker account (id 0):
+        token (id 99) balance before: 1000000
+        token (id 99) balance after: 600000
+        token (id 133) balance before: 5000000
+        token (id 133) balance after: 5069790
+    Updating maker account (id 5):
+        token (id 99) balance before: 7500000
+        token (id 99) balance after: 7900000
+        token (id 133) balance before: 200000
+        token (id 133) balance after: 130000
     --------------------------------------------
+    Update taker/maker balance complete
+    Order data ---------------------------------
     Taker: 5
     Taker token: 99
     Taker token amount: 190000
@@ -95,17 +87,19 @@
     Maker token: 133
     Maker token amount: 12000
     --------------------------------------------
-    fee charged for maker token (133): 36
-    update taker (5) account
-    token 99 balance before: 7900000
-    token 99 balance after: 7710000
-    token 133 balance before: 130000
-    token 133 balance after: 141964
-    update maker (0) account
-    token 99 balance before: 600000
-    token 99 balance after: 790000
-    token 133 balance before: 5069790
-    token 133 balance after: 5057790
+    Fee charged for maker token (id 133): 36
+    Updating taker account (id 5):
+        token (id 99) balance before: 7900000
+        token (id 99) balance after: 7710000
+        token (id 133) balance before: 130000
+        token (id 133) balance after: 141964
+    Updating maker account (id 0):
+        token (id 99) balance before: 600000
+        token (id 99) balance after: 790000
+        token (id 133) balance before: 5069790
+        token (id 133) balance after: 5057790
+    --------------------------------------------
+    Update taker/maker balance complete
     Program output:
         210
         36

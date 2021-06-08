@@ -37,8 +37,7 @@ func swap{
         # Print the transaction values using a hint, for
         # debugging purposes.
         print(
-            f'Order data:\n'
-            f'--------------------------------------------\n'
+            f'Order data ---------------------------------\n'
             f'Taker: {ids.transaction.taker_account_id}\n'
             f'Taker token: {ids.transaction.taker_token_id}\n'
             f'Taker token amount: {ids.taker_token_amount}\n'
@@ -46,8 +45,8 @@ func swap{
             f'Maker token: {ids.transaction.maker_token_id}\n'
             f'Maker token amount: {ids.maker_token_amount}\n'
             f'--------------------------------------------')
-        print(f'fee charged for maker token ({ids.transaction.maker_token_id}): {ids.fee_b}')
-        print(f'update taker ({ids.transaction.taker_account_id}) account')
+        print(f'Fee charged for maker token (id {ids.transaction.maker_token_id}): {ids.fee_b}')
+        print(f'Updating taker account (id {ids.transaction.taker_account_id}):')
     %}
     let (state, pub_key_a) = update_account(
         state=state,
@@ -58,7 +57,7 @@ func swap{
         amount_b_diff=(maker_token_amount - fee_b))
 
     %{
-        print(f'update maker ({ids.transaction.maker_account_id}) account')
+        print(f'Updating maker account (id {ids.transaction.maker_account_id}):')
     %}
     let (state, pub_key_b) = update_account(
         state=state,
@@ -68,6 +67,10 @@ func swap{
         token_b_id=transaction.maker_token_id,
         amount_b_diff=-maker_token_amount)
 
+    %{
+        print(f'--------------------------------------------')
+        print(f'Update taker/maker balance complete')
+    %}
     verify_tx_signature(
         transaction,
         pub_key_a,
