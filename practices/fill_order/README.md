@@ -126,3 +126,11 @@
         - this pie file can be sent to SHARP with command `cairo-sharp submit --cairo_pie PIE_FILE_NAME`
     - you can run `python practices/fill_order/utils/compute_output_and_fact.py` to output program hash, program output and the fact for this round of execution
         - NOTE: program hash will be the same as long as the cairo program remains unchanged, however, fact will change based on the outputs each time
+        - output should be like this:
+        ```
+        program hash: 0x48b5e5ace04d89bdd9d6cdebaf46e54131b5dc6ac0ab03f322889f51a717c0c
+        program output: [210, 36, 3513649642851389103528329536082144519835916108258125939543239512794009914299, 2252002319436965673537320875970562059641865197097007355988057426387825141358]
+        fact: 0xeda8a1cd7026bb493eff1dcb1415911dcee9dad9bca845d3a95850f0de77e637
+        ```
+        - note that the pre/post state roots in `program output` is the same as the ones computed in `compute_root.py` script
+        - and the fact is computed based on the `program hash` and `program output`
