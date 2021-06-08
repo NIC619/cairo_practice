@@ -8,6 +8,7 @@ const FEE_BPS = 30
 
 struct Account:
     member public_key : felt
+    # A dictionary that tracks the account's token balances.
     member token_balance_dict_start : DictAccess*
     member token_balance_dict_end : DictAccess*
 end
@@ -32,10 +33,17 @@ struct SwapTransaction:
     member s_b : felt
 end
 
+#
 # The output of the program.
+#
 struct FeeOutput:
     member amount : felt
 end
+
+struct TransactionHashOutput:
+    member tx_hash : felt
+end
+
 struct MerkleRootsOutput:
     # The account Merkle roots before and after applying
     # the batch.
