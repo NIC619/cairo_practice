@@ -13,14 +13,14 @@ Ref: [Cairo doc - Setting up the environment](https://www.cairo-lang.org/docs/qu
 
 #### 1. StarkNet contracts
 - create a cairo file `test.cairo`
-- compile: `starknet-compile test.cairo --output test_compiled.json --abi=test_compiled_abi.json`
-- deploy the contract: `starknet deploy --contract test_compiled.json --network=alpha`
-- query tx status: `starknet tx_status --id=XXXXX --network=alpha`
-- query storage in contract: `starknet call --address=0xabcdef...... --abi test_compiled_abi.json --function get_XXX`
-- invoke the contract: `starknet invoke --address=0xabcdef...... --abi test_compiled_abi.json --function do_XXX --inputs A B C --network=alpha`
+- compile: `starknet-compile test.cairo --output test_compiled.json --abi test_compiled_abi.json`
+- deploy the contract: `starknet deploy --contract test_compiled.json --network alpha`
+- query tx status: `starknet tx_status --id XXXXX --network alpha`
+- query storage in contract: `starknet call --address 0xabcdef...... --abi test_compiled_abi.json --function get_XXX`
+- invoke the contract: `starknet invoke --address 0xabcdef...... --abi test_compiled_abi.json --function do_XXX --inputs A B C --network alpha`
 
 #### 2. Cairo
 - create a cairo file `test.cairo`
 - compile: `cairo-compile test.cairo --output test_compiled.json`
-- run the program: `cairo-run --program=test_compiled.json --print_output --print_info --relocate_prints`
+- run the program: `cairo-run --program test_compiled.json --print_output --print_info --relocate_prints`
     - tracer can be enabled by adding `--tracer` flag to `cairo_run`, after tracer is enabled, open `http://localhost:8100/` in browser
