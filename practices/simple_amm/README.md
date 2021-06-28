@@ -1,5 +1,5 @@
 ### Compile and run
-- compile: `cairo-compile main.cairo --output amm_compiled.json`
+- compile: `cairo-compile amm.cairo --output amm_compiled.json`
 - run the program: `cairo-run --program=amm_compiled.json --print_output --layout=small --program_input=amm_input.json`
     - output should be:
     ```

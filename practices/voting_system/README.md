@@ -1,5 +1,5 @@
 ### Compile and run
-- compile: `cairo-compile main.cairo --output voting_compiled.json`
+- compile: `cairo-compile voting.cairo --output voting_compiled.json`
 - gen first batch of votes: `python gen_votes.py`
 - run the program w/ first batch of votes: `cairo-run --program=voting_compiled.json --print_output --layout=small --program_input=voting_input.json`
     - output should be:
